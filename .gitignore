@@ -1,3 +1,4 @@
-
+*.npz
 *.pt
+exp_data/*.npz
 __pycache__/*
