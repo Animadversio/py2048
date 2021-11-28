@@ -59,5 +59,5 @@ np.savez("exp_data\\expectimax_scores.npz", scores=final_scores)
 import matplotlib.pylab as plt
 plt.figure()
 plt.hist(final_scores,50);plt.xlabel("final score");plt.title("Multi-Sample Expectimax")
-plt.savefig("expectimax.png")
+plt.savefig("expectimax.png")  # depth 2, sample N 4
 plt.show()
