@@ -1,4 +1,4 @@
-
+"""Main game logic for 2048"""
 
 import numpy as np
 from copy import copy, deepcopy
@@ -124,7 +124,7 @@ def getInitState():
     addRandomFall(board, 2)
     return board
 
-#%%
+#%% Collection of baseline policies.
 def RandomPolicy(board):
     act = choice(actions)
     return act
@@ -163,7 +163,7 @@ def ExpectiMax(board, level=4, sampn=5):
         if curvalue > bestVal: bestVal, bestAct = curvalue, act
     return bestAct, bestVal
 
-def gameSimul(policy, policyArgs={}, initboard=None, initscore=0):
+def gameSimul(policy, policyArgs={}, initboard=None, initscore=0, printfreq=50):
     board = getInitState() if initboard is None else initboard
     score = initscore
     actseq = []
@@ -174,7 +174,7 @@ def gameSimul(policy, policyArgs={}, initboard=None, initscore=0):
         actseq.append(act)
         board, reward, finished = getSuccessor(board, action=act, show=False)
         score += reward
-        if len(actseq) % 50==0:
+        if printfreq != 0 and (len(actseq) % printfreq == 0):
             print("Step %d score %d"%(len(actseq), score))
             print(board)
         if finished:
@@ -184,8 +184,6 @@ def gameSimul(policy, policyArgs={}, initboard=None, initscore=0):
 #%%
 
 if __name__ == "__main__":
-    # Try GUI version
-    # GUI_loop(board=None, score=0)
     # Let AI play this!
     board = getInitState()
     score = 0
