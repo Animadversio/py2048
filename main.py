@@ -164,6 +164,12 @@ def ExpectiMax(board, level=4, sampn=5):
     return bestAct, bestVal
 
 def gameSimul(policy, policyArgs={}, initboard=None, initscore=0, printfreq=50):
+    """game engine
+    policy: a function handle with signature
+        `act, bestVal, = policy(board, **policyArgs)`
+    policyArgs: dictionary of keyword arguments.
+
+    """
     board = getInitState() if initboard is None else initboard
     score = initscore
     actseq = []

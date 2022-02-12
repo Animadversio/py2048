@@ -2,6 +2,18 @@ from main import ExpectiMax, RndMax
 from main import getSuccessor, getInitState
 import numpy as np
 def traj_sampler(policy, initboard=None, initscore=0, policyArgs={}, printfreq=50):
+    """ Trajectory sampler with a given policy.
+    policy: policy function
+    policyArgs: dict of arguments to policy function.
+    initboard: initial board state.
+    printfreq: positive integer, print frequency; 0 for not print until finish; -1 for total silence.  
+
+    return :
+        stateseq: list of array representing boards, length T+1; starts from s_0
+        actseq: list of scalar, action indices, length T; starts from a_1
+        rewardseq: list of scalar, length T; starts from r_1
+        sum_reward: sum(rewardseq) total reward gain in this trajectory, without decay.
+    """
     # act, bestVal, = RndMax(board, 3)
     # act, bestVal, = ExpectiMax(board, 2, sampn=4)
     # act = choice(actions)
@@ -18,10 +30,10 @@ def traj_sampler(policy, initboard=None, initscore=0, policyArgs={}, printfreq=5
         stateseq.append(board)
         rewardseq.append(reward)
         score += reward
-        if printfreq != 0 and (len(actseq) % printfreq == 0):
+        if printfreq != 0 and printfreq != -1 and (len(actseq) % printfreq == 0):
             print("Step %d score %d" % (len(actseq), score))
             print(board)
-        if finished:
+        if finished and printfreq != -1:
             print("Game Over, step %d score %d" % (len(actseq), score))
             break
     return stateseq, actseq, rewardseq, sum(rewardseq)

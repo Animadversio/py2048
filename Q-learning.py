@@ -21,9 +21,11 @@ def episodeLoader(triali):
         actseq, rewardseq, stateseq, score_tot = episode_buffer[triali]
         return actseq, rewardseq, stateseq, score_tot
 
+
 def episodeSaver(triali, actseq, rewardseq, stateseq, score_tot):
     episode_buffer[triali] = torch.tensor(actseq), torch.tensor(rewardseq), \
                              torch.tensor(stateseq), score_tot
+
 
 
 class Q_net(torch.nn.Module):
