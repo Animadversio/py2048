@@ -1,4 +1,5 @@
 import pygame as pg
+from main import *
 pg.display.set_caption("SLG board")
 SCREEN = pg.display.set_mode((400, 500)) # get screen
 screen = pg.display.get_surface()
