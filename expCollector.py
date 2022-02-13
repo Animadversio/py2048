@@ -6,7 +6,7 @@ def traj_sampler(policy, initboard=None, initscore=0, policyArgs={}, printfreq=5
     policy: policy function
     policyArgs: dict of arguments to policy function.
     initboard: initial board state.
-    printfreq: positive integer, print frequency; 0 for not print until finish; -1 for total silence.  
+    printfreq: positive integer, print frequency; 0 for not print until finish; -1 for total silence.
 
     return :
         stateseq: list of array representing boards, length T+1; starts from s_0
@@ -33,10 +33,42 @@ def traj_sampler(policy, initboard=None, initscore=0, policyArgs={}, printfreq=5
         if printfreq != 0 and printfreq != -1 and (len(actseq) % printfreq == 0):
             print("Step %d score %d" % (len(actseq), score))
             print(board)
-        if finished and printfreq != -1:
-            print("Game Over, step %d score %d" % (len(actseq), score))
+        if finished:
+            if printfreq != -1:
+                print("Game Over, step %d score %d" % (len(actseq), score))
             break
     return stateseq, actseq, rewardseq, sum(rewardseq)
+
+
+episode_buffer = {}
+def episodeLoader(triali, episode_buffer=episode_buffer, savetensor=False):
+    if triali not in episode_buffer:
+        data = np.load("exp_data\\traj%03d.npz"%triali)
+        actseq = data['actseq']  # (T, )
+        rewardseq = data['rewardseq']  # (T, )
+        stateseq = data['stateseq']  # (T+1, 4, 4)
+        score_tot = data['score']
+        if savetensor:
+            episode_buffer[triali] = torch.tensor(actseq), torch.tensor(rewardseq), \
+                                     torch.tensor(stateseq), score_tot
+            return torch.tensor(actseq), torch.tensor(rewardseq), \
+                                     torch.tensor(stateseq), score_tot
+        else:
+            episode_buffer[triali] = actseq, rewardseq, stateseq, score_tot
+            return actseq, rewardseq, stateseq, score_tot
+    else:
+        actseq, rewardseq, stateseq, score_tot = episode_buffer[triali]
+        return actseq, rewardseq, stateseq, score_tot
+
+
+def episodeSaver(triali, actseq, rewardseq, stateseq, score_tot, episode_buffer=episode_buffer, savetensor=False):
+    if savetensor:
+        episode_buffer[triali] = torch.tensor(actseq), torch.tensor(rewardseq), \
+                                 torch.tensor(stateseq), score_tot
+    else:
+        episode_buffer[triali] = actseq, rewardseq, stateseq, score_tot
+
+
 #%%
 if __name__=="__main__":
     from time import time

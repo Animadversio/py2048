@@ -1,9 +1,11 @@
+
+import numpy as np
 import torch
 from tqdm import tqdm
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.optim import Adam, SGD
-import numpy as np
+from torch.utils.tensorboard import SummaryWriter
 from collections import OrderedDict
 from main import getInitState, getSuccessor, getSuccessors, gameSimul, actions, sample
 #%
@@ -162,7 +164,6 @@ def Qnet_ExpectiMax(board, Qnet, level=1, sampn=3):
     return bestAct, bestVal
 
 #%% Training loop routines
-from torch.utils.tensorboard import SummaryWriter
 def train_episode_iter(Qnet, optimizer, epoc_num=50, epoc_start=0):
     """Go through the episodes one by one and do batch q learning for each of them"""
     Qnet.eval()
