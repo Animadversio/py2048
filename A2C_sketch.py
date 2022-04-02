@@ -7,6 +7,8 @@ from tqdm import tqdm
 from torch.optim import Adam, SGD
 from collections import OrderedDict
 import copy
+
+from expCollector import traj_sampler
 from main import getInitState, getSuccessor, getSuccessors, gameSimul, actions, sample
 import matplotlib.pylab as plt
 
@@ -304,7 +306,8 @@ def update_A2C_IS(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer):
 
 #%%
 def update_PPO(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer,
-               K_epochs=40, update_step_freq=3000, writer=None, global_step=0):
+               K_epochs=40, update_step_freq=3000, writer=None, global_step=0,
+               value_normalize=500):
     Pnet.train()
     Vnet.train()
     Pnet_orig = copy.deepcopy(Pnet)
@@ -341,7 +344,7 @@ def update_PPO(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer,
                 reward2go = reward_cur + gamma * reward2go
                 reward2go_vec.insert(0, reward2go)
 
-            reward2go_vec = torch.tensor(reward2go_vec).cuda()
+            reward2go_vec = torch.tensor(reward2go_vec).cuda() / value_normalize
 
             with torch.no_grad():
                 logactprob_orig = Pnet_orig(stateseq_tsr[0: T].cuda())
@@ -395,11 +398,11 @@ def update_PPO(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer,
         
 
 #%% Training cycle
-from expCollector import traj_sampler
 B = 300
-beta = 0.5
+beta = 0.02
 epsilon = 0.2
 gamma = 0.99
+#%%
 # update_epoch = 10
 # gradstep_freq = 20
 Pnet = policy_CNN().cuda()
@@ -413,8 +416,23 @@ global_step = 0
 global_step = 9300
 global_step = 12600
 #%%
-update_step_freq = 40000
-for cycle in range(55, 65):
+import os
+from os.path import join
+from torch.utils.tensorboard import SummaryWriter
+Pnet = policy_CNN().cuda()
+Vnet = Value_CNN().cuda()
+Poptim = Adam([*Pnet.parameters()], lr=0.0002)
+Voptim = Adam([*Vnet.parameters()], lr=0.0002)
+Pnet.load_state_dict(torch.load(r"ckpt\behav_clone\Pnet_iter37_best.pt"))
+Vnet.load_state_dict(torch.load(r"ckpt\value_iter_norm\Vnet_behcln_policy_iter48_gs32300.pt"))
+#%%
+explabel = "PPO_BC_init"
+writer = SummaryWriter("logs\\PPO_behavclone_init_valnorm2")
+global_step = 0
+os.makedirs(join("ckpt", explabel), exist_ok=True)
+#%%
+update_step_freq = 60000
+for cycle in range(8, 50):
     # collect data
     Pnet.eval()
     onpolicy_buffer = {}
@@ -441,10 +459,11 @@ for cycle in range(55, 65):
     # update model
     # update_A2C_IS(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer)
     global_step = update_PPO(Pnet, Vnet, Poptim, Voptim, onpolicy_buffer,
-               update_step_freq=update_step_freq, K_epochs=200, writer=writer, global_step=global_step)
-    if cycle % 5 == 0:
-        torch.save(Pnet.state_dict(), f"ckpt\\Pnet_iter{cycle:d}_gs{global_step:d}.pt")
-        torch.save(Vnet.state_dict(), f"ckpt\\Vnet_iter{cycle:d}_gs{global_step:d}.pt")
+               update_step_freq=update_step_freq, K_epochs=100, writer=writer, global_step=global_step)
+    if cycle % 2 == 0:
+        torch.save(Pnet.state_dict(), f"ckpt\\{explabel}\\Pnet_iter{cycle:d}_gs{global_step:d}.pt")
+        torch.save(Vnet.state_dict(), f"ckpt\\{explabel}\\Vnet_iter{cycle:d}_gs{global_step:d}.pt")
+
 
 #%% load dict
 Pnet.load_state_dict(torch.load(f"ckpt\\Pnet_iter{30:d}_gs{9300:d}.pt"))
