@@ -41,13 +41,16 @@ def traj_sampler(policy, initboard=None, initscore=0, policyArgs={}, printfreq=5
 
 
 episode_buffer = {}
-def episodeLoader(triali, episode_buffer=episode_buffer, savetensor=False):
+def episodeLoader(triali, episode_buffer=episode_buffer, savetensor=False, align=False):
     if triali not in episode_buffer:
         data = np.load("exp_data\\traj%03d.npz"%triali)
-        actseq = data['actseq']  # (T, )
-        rewardseq = data['rewardseq']  # (T, )
-        stateseq = data['stateseq']  # (T+1, 4, 4)
-        score_tot = data['score']
+        actseq = data['actseq'].copy()  # (T, )
+        rewardseq = data['rewardseq'].copy()  # (T, )
+        stateseq = data['stateseq'].copy()  # (T+1, 4, 4)
+        score_tot = data['score'].copy()
+        if align:
+            actseq = np.append(actseq, 0)
+            rewardseq = np.append(rewardseq, 0)
         if savetensor:
             episode_buffer[triali] = torch.tensor(actseq), torch.tensor(rewardseq), \
                                      torch.tensor(stateseq), score_tot
