@@ -1,6 +1,10 @@
+# Training Agents to play 2048
+
+----
 ## Analysis of the Game
 Game state is the 16 numbers on the 4 x 4 board. 
 
+![](figures/2048GameShot2.png)
 ## Work in Progress
 
 - [x] Deep Q Learning
@@ -12,13 +16,30 @@ Game state is the 16 numbers on the 4 x 4 board.
 - [x] implement A2C from scratch...
 - [ ] implement PPO from scratch
 - [ ] refactor nn update process
-- [ ] try implement multiprocessing on windows... 
+- [ ] ~~try implement multiprocessing on windows...~~ 
+- [x] Train using Stable Baselines3, PPO
+- [x] Train using Stable Baselines3, PPO initalized from behavior cloning agent. 
+- [x] Train using Stable Baselines3, DQN
 
 
 ## Performance Comparison 
-Non-RL, Tree search method (Monte Carlo Expectation maximization) with 2 search step and 4 seeds. Mean score 3823.38+-1776.06. Max score 12524. 
+**Non-RL, Tree search method** (Monte Carlo Expectation maximization) with 2 search step and 4 seeds. Mean score 3823.38+-1776.06. Max score 12524. 
 
-![](expectimax.png)
+![](figures/expectimax.png)
+
+**Behavior cloning** from the dataset collected by tree search method. Mean score 2612.72+-1289.63. As expected, behavior cloning is not as good as expectimax since it has no notion of reward and try to match everything. (not showing)
+
+**RL method**: DQN, PPO. DQN trains faster and reached higher score in our experiment. (reached ~4000 score in 1 hour.) 
+* PPO, mean score: 4950.20+-2665.72, Max score: 14660.
+* DQN, mean score: 6218.52+-3881.79, Max score: 26104.
+
+![](figures/PPO_eps_reward_hist.png)
+
+![](figures/DQN_eps_reward_hist.png)
+
+Merged comparison plot of DQN, PPO and expectimax. DQN is the winner! 
+![](figures/score_comparison_DQN_PPO_ExpectiMax.png)
+
 
 ## Lessons Learnt about training RL agent
 * Note the loss of different trajectories needs to be mean over not summed... 
