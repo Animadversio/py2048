@@ -34,7 +34,7 @@ model.save(r"E:\Github_Projects\2048\results\DQN_3dCNN_rew_norm_clip1500\DQN_0\D
 venv_norm.save(r"E:\Github_Projects\2048\results\DQN_3dCNN_rew_norm_clip1500\DQN_0\DQN_18M_rew_norm_clip2500_vecnorm.pkl")
 #%%
 model.save(r"E:\Github_Projects\2048\results\DQN_3dCNN_rew_norm_clip1500\DQN_0\DQN_08M_rew_norm_clip1500")
-#%% Evaluation 
+#%% Evaluation
 eps_rew, eps_len = evaluate_policy(model, venv, n_eval_episodes=1000, render=False, return_episode_rewards=True)
 print(f"Episode reward {np.mean(eps_rew)}+-{np.std(eps_rew)}")
 print(f"Episode length {np.mean(eps_len)}+-{np.std(eps_len)}")
