@@ -10,6 +10,7 @@ RIGHT = 3
 actions = [UP, DOWN, LEFT, RIGHT]
 dimen = 4
 
+
 def mergeSeq(seq):
     # merge from left
     # this is not exhaustive merge. can change to merge everything.
@@ -24,6 +25,7 @@ def mergeSeq(seq):
         else:
             csr += 1
     return seq, reward
+
 
 def fallRow(row, dir=LEFT):
     seq = [num for num in row if num != NULLVAL]
@@ -40,6 +42,7 @@ def fallRow(row, dir=LEFT):
     else:
         raise ValueError
     return newrow, reward
+
 
 def fallBoard(board, dir=LEFT):
     reward_all = 0
@@ -83,6 +86,7 @@ def getSuccessor(state, action, show=True, clone=True):
     if show: print(nextstate)
     return nextstate, reward, finished
 
+
 def getSuccessors(state, action, clone=True):
     if clone: state = copy(state)
     nextstate, reward = fallBoard(state, action)
@@ -99,6 +103,7 @@ def getSuccessors(state, action, clone=True):
         finished = False
     return nextstates, reward, finished
 
+
 from random import choice, sample
 def addRandomFall(state, val):
     posList = []
@@ -111,6 +116,7 @@ def addRandomFall(state, val):
     state[rndpos] = val
     return state
 
+
 def getEmptyPos(state):
     posList = []
     for i in range(dimen):
@@ -118,6 +124,7 @@ def getEmptyPos(state):
             if state[i, j] == NULLVAL:
                 posList.append((i, j))
     return posList
+
 
 def getInitState():
     board = NULLVAL * np.ones((4, 4), dtype=np.int)
@@ -128,6 +135,7 @@ def getInitState():
 def RandomPolicy(board):
     act = choice(actions)
     return act
+
 
 def RndMax(board, level=4):
     """"""
@@ -142,6 +150,7 @@ def RndMax(board, level=4):
         curvalue = nextvalue + reward - (finished) * 1000 # punishment for death
         if curvalue > bestVal: bestVal, bestAct = curvalue, act
     return bestAct, bestVal
+
 
 def ExpectiMax(board, level=4, sampn=5):
     """ExpectiMax policy (Expectation over random fall of blocks), with certain depth termination.
@@ -162,6 +171,7 @@ def ExpectiMax(board, level=4, sampn=5):
         curvalue = nextvalue + reward - (finished) * 1000 # punishment for death
         if curvalue > bestVal: bestVal, bestAct = curvalue, act
     return bestAct, bestVal
+
 
 def gameSimul(policy, policyArgs={}, initboard=None, initscore=0, printfreq=50):
     """game engine

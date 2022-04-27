@@ -50,6 +50,7 @@ def GUI_loop(board=None, score=0):
                 exitFlag = True
         drawBoard(board, score)
         pg.display.update()
+    return actseq, score
 
 if __name__ == "__main__":
     # Try GUI version
