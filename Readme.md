@@ -1,4 +1,4 @@
-# Training Agents to play 2048
+# Training Agents to play 2048 with 3D CNN
 
 ## Analysis of the Game
 Game state is the 16 numbers on the 4 x 4 board. 
