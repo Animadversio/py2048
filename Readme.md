@@ -1,6 +1,5 @@
 # Training Agents to play 2048
 
-----
 ## Analysis of the Game
 Game state is the 16 numbers on the 4 x 4 board. 
 
@@ -8,15 +7,17 @@ Game state is the 16 numbers on the 4 x 4 board.
 ## Work in Progress
 
 - [x] Deep Q Learning
-- [ ] Functional approximator for Q function. 
+- [x] Functional approximator for Q function. 
     - [x] Adding BN to Q model  
     - [x] Add exponential activation at the end, add log prerpocessing at the start.
 - [x] Implement CNN version of Q network. 
 - [x] Apply Q function to policy. 
 - [x] implement A2C from scratch...
 - [ ] implement PPO from scratch
-- [ ] refactor nn update process
+- [ ] ~~refactor nn update process~~
 - [ ] ~~try implement multiprocessing on windows...~~ 
+- [x] Advanced function approximators building in more invariance across log space.  
+  - [x] Implement 3D convolutional network as policy or Q network. --- really helpful.
 - [x] Train using Stable Baselines3, PPO
 - [x] Train using Stable Baselines3, PPO initalized from behavior cloning agent. 
 - [x] Train using Stable Baselines3, DQN
