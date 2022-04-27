@@ -100,6 +100,7 @@ def update_behav_clone(Pnet, Poptim, target_buffer,
                     f"Run{runi:d}-opt{iK:d} cross entropy {cross_entropy_mean:.1f} entropy bonus {entrp_bonus_mean:.1f}")
     return global_step
 
+
 def Pnet_policy(board, Pnet, device="cpu"):
     with torch.no_grad():
         prob = Pnet(torch.tensor(board).unsqueeze(0).to(device))
