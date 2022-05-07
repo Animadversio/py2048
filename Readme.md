@@ -39,8 +39,10 @@ Game state is the 16 numbers on the 4 x 4 board.
 ![](figures/DQN_eps_reward_hist.png)
 
 Merged comparison plot of DQN, PPO and expectimax. DQN is the winner! 
-![](figures/score_comparison_DQN_PPO_ExpectiMax.png)
+![](figures/score_comparison_DQN3_PPO_ExpectiMax.png)
 
+A Demo video of agent behavior:
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/COQoG1CeGxI/0.jpg)](https://www.youtube.com/watch?v=COQoG1CeGxI)
 
 ## Lessons Learnt about training RL agent
 * Note the loss of different trajectories needs to be mean over not summed... 
