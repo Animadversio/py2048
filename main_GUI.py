@@ -5,13 +5,27 @@ SCREEN = pg.display.set_mode((400, 500)) # get screen
 screen = pg.display.get_surface()
 # Setup Font
 pg.font.init()
-font = pg.font.SysFont("microsoftsansserif", 20, bold=False)
+font = pg.font.SysFont("microsoftsansserif", 27, bold=False)
 board_WIDTH, board_HEIGHT = 400, 500
 TileW = 100
 Margin = 5
-NUMCOLOR = {NULLVAL: (200, 200, 200), 1: (190, 190, 200), 2: (180, 180, 200), 4: (180, 180, 210), 8: (170, 170, 210),
-            16: (165, 165, 220), 32: (155, 155, 220), 64: (145, 145, 225), 128: (135, 135, 225), 256: (125, 125, 230),
-            512: (110, 110, 240), 1024: (95, 95, 240), 2048: (80, 80, 250)}
+NUMCOLOR = {NULLVAL: (200, 200, 200), 1: (190, 190, 200),
+            2: (180, 180, 200),
+            4: (180, 180, 210),
+            8: (170, 170, 210),
+            16: (165, 165, 220),
+            32: (155, 155, 220),
+            64: (145, 145, 225),
+            128: (135, 135, 225),
+            256: (125, 125, 230),
+            512: (110, 110, 240),
+            1024: (95, 95, 240),
+            2048: (80, 80, 250),
+            4096: (65, 65, 250),
+            8192: (50, 50, 255)}
+import matplotlib.pyplot as plt
+NUMCOLOR = {2**i: (255*np.array(plt.cm.summer(i / 13))[:3]).astype(int) for i in range(14)}
+NUMCOLOR[NULLVAL] = (200, 200, 200)
 
 def drawBoard(board, score):
     pg.draw.rect(screen, (240, 240, 240), pg.Rect(0, 0, board_WIDTH, board_HEIGHT), 0)
@@ -25,6 +39,7 @@ def drawBoard(board, score):
                 screen.blit(img, ((i + 1/2) * TileW - 28, (j + 1/2) * TileW - 18))
     scoreimg = font.render('%d' % score, True, (100, 40, 40))
     screen.blit(scoreimg, (200, 450))
+
 
 def GUI_loop(board=None, score=0):
     if board is None:
@@ -51,6 +66,7 @@ def GUI_loop(board=None, score=0):
         drawBoard(board, score)
         pg.display.update()
     return actseq, score
+
 
 if __name__ == "__main__":
     # Try GUI version

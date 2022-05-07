@@ -52,6 +52,12 @@ class Gym2048Env(gym.Env):
         return np.floor(np.log2(board + 1)).astype("uint8")
 
 
+def logscale2board(logscale_tsr):
+    board = 2 ** logscale_tsr.argmax(axis=0)
+    board[board == 1] = 0
+    return board
+
+
 if __name__ == "__main__":
     from stable_baselines3.common.env_checker import check_env
     for obstype in ["tensor", "logmap"]:

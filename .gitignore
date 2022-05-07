@@ -3,3 +3,4 @@
 exp_data/*.npz
 __pycache__/*
 .idea/*
+record/*
